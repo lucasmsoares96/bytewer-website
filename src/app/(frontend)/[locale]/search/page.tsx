@@ -2,25 +2,29 @@ import type { Metadata } from 'next/types'
 
 import { CollectionArchive } from '@/components/CollectionArchive'
 import configPromise from '@payload-config'
-import { getPayload } from 'payload'
+import { getPayload, type TypedLocale } from 'payload'
 import React from 'react'
 import { Search } from '@/search/Component'
 import PageClient from './page.client'
 import { CardPostData } from '@/components/Card'
 
 type Args = {
+  params: Promise<{ locale?: string }>
   searchParams: Promise<{
     q: string
   }>
 }
-export default async function Page({ searchParams: searchParamsPromise }: Args) {
+export default async function Page({ params: paramsPromise, searchParams: searchParamsPromise }: Args) {
   const { q: query } = await searchParamsPromise
+  const { locale } = (await paramsPromise) ?? {}
+  const typedLocale = locale as TypedLocale | undefined
   const payload = await getPayload({ config: configPromise })
 
   const posts = await payload.find({
     collection: 'search',
     depth: 1,
     limit: 12,
+    ...(typedLocale ? { locale: typedLocale } : {}),
     select: {
       title: true,
       slug: true,

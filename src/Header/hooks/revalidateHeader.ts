@@ -7,6 +7,8 @@ export const revalidateHeader: GlobalAfterChangeHook = ({ doc, req: { payload, c
     payload.logger.info(`Revalidating header`)
 
     revalidateTag('global_header', 'max')
+    revalidateTag('global_header_pt-BR', 'max')
+    revalidateTag('global_header_en', 'max')
   }
 
   return doc

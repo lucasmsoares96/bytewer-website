@@ -4,7 +4,7 @@ import { CollectionArchive } from '@/components/CollectionArchive'
 import { PageRange } from '@/components/PageRange'
 import { Pagination } from '@/components/Pagination'
 import configPromise from '@payload-config'
-import { getPayload } from 'payload'
+import { getPayload, type TypedLocale } from 'payload'
 import React from 'react'
 import PageClient from './page.client'
 import { notFound } from 'next/navigation'
@@ -13,12 +13,14 @@ export const revalidate = 600
 
 type Args = {
   params: Promise<{
+    locale?: string
     pageNumber: string
   }>
 }
 
 export default async function Page({ params: paramsPromise }: Args) {
-  const { pageNumber } = await paramsPromise
+  const { pageNumber, locale } = await paramsPromise
+  const typedLocale = locale as TypedLocale | undefined
   const payload = await getPayload({ config: configPromise })
 
   const sanitizedPageNumber = Number(pageNumber)
@@ -31,10 +33,11 @@ export default async function Page({ params: paramsPromise }: Args) {
     limit: 12,
     page: sanitizedPageNumber,
     overrideAccess: false,
+    ...(typedLocale ? { locale: typedLocale } : {}),
   })
 
   return (
-    <div className="pt-24 pb-24">
+    <div className="pt-24 md:pt-32 pb-24">
       <PageClient />
       <div className="container mb-16">
         <div className="prose dark:prose-invert max-w-none">
@@ -47,6 +50,7 @@ export default async function Page({ params: paramsPromise }: Args) {
           collection="posts"
           currentPage={posts.page}
           limit={12}
+          locale={typedLocale}
           totalDocs={posts.totalDocs}
         />
       </div>
