@@ -22,6 +22,13 @@ const OG_LOCALE_MAP: Record<string, string> = {
   en: 'en_US',
 }
 
+const DEFAULT_OG_IMAGE: OGImage = {
+  url: '/website-template-OG.webp',
+  width: 1200,
+  height: 630,
+  alt: 'Website Template',
+}
+
 const getImageURL = (
   image?: Media | Config['db']['defaultIDType'] | null,
 ): OGImage | undefined => {
@@ -56,7 +63,7 @@ export const generateMeta = async (args: {
 
   const docImage = getImageURL(doc?.meta?.image)
   const ogImage: OGImage | undefined =
-    docImage ?? (seo.ogImageUrl ? { url: seo.ogImageUrl } : undefined)
+    docImage ?? (seo.ogImageUrl ? { url: seo.ogImageUrl } : undefined) ?? DEFAULT_OG_IMAGE
 
   const siteName = seo.siteName ?? seo.metaTitle ?? undefined
   const baseTitle = seo.metaTitle ?? siteName
