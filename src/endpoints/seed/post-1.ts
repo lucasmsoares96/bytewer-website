@@ -5,15 +5,61 @@ export type PostArgs = {
   heroImage: Media
   blockImage: Media
   author: User
+  locale?: 'pt-BR' | 'en'
 }
 
 export const post1: (args: PostArgs) => RequiredDataFromCollectionSlug<'posts'> = ({
   heroImage,
   blockImage,
   author,
+  locale = 'en',
 }) => {
+  const isEn = locale === 'en'
+  const t = {
+    title: isEn
+      ? 'How to run a digital product discovery in 4 weeks'
+      : 'Como estruturar um discovery de produto digital em 4 semanas',
+    metaTitle: isEn
+      ? 'How to run a 4-week digital product discovery sprint'
+      : 'Como estruturar um discovery de produto digital em 4 semanas',
+    intro: isEn
+      ? 'A short playbook on the discovery process Bytewer applies on every new engagement — from problem framing to a buildable backlog, in just four weeks.'
+      : 'Um playbook curto sobre o processo de discovery que a Bytewer aplica em todo novo projeto — do enquadramento do problema a um backlog pronto para construção, em apenas quatro semanas.',
+    h1: isEn ? 'Why a time-boxed discovery still wins' : 'Por que um discovery com prazo definido ainda funciona',
+    p1: isEn
+      ? 'Most digital projects fail not because the team cannot build, but because the team builds the wrong thing. A focused discovery sprint forces the right conversations early: who is the user, what decision are we improving, what would make this measurably better, and what would make it fail. Four weeks is enough to interview real users, validate the riskiest assumptions, and converge on a scope the engineering team can commit to without surprises in week six.'
+      : 'A maioria dos projetos digitais falha não porque o time não sabe construir, mas porque constrói a coisa errada. Um sprint de discovery focado força as conversas certas logo no início: quem é o usuário, qual decisão estamos melhorando, o que tornaria isso mensuravelmente melhor e o que faria fracassar. Quatro semanas bastam para entrevistar usuários reais, validar as hipóteses mais arriscadas e convergir em um escopo que o time de engenharia pode assumir sem surpresas na semana seis.',
+    h2: isEn ? 'The four-week structure we use' : 'A estrutura de quatro semanas que usamos',
+    p2: isEn
+      ? 'Each week has a single job. Week one is framing: stakeholder interviews, success metrics, and a written problem statement everyone signs off on. Week two is field research: five to eight user interviews, a competitive sweep, and a synthesis of pain points. Week three is solutioning: low-fidelity flows, technical spikes on the riskiest integrations, and a rough cost model. Week four is convergence: clickable prototype, a sliced backlog with effort estimates, and a go/no-go recommendation backed by evidence.'
+      : 'Cada semana tem um único objetivo. A semana um é de enquadramento: entrevistas com stakeholders, métricas de sucesso e uma declaração escrita do problema validada por todos. A semana dois é de pesquisa de campo: cinco a oito entrevistas com usuários, uma varredura competitiva e síntese das dores. A semana três é de solução: fluxos em baixa fidelidade, spikes técnicos nas integrações mais arriscadas e um modelo de custo aproximado. A semana quatro é de convergência: protótipo clicável, backlog fatiado com estimativas de esforço e uma recomendação go/no-go baseada em evidências.',
+    listIntro: isEn ? 'Deliverables we hand over at the end of week four:' : 'Entregáveis ao final da semana quatro:',
+    li1: isEn
+      ? 'Problem statement and success metrics agreed by stakeholders.'
+      : 'Declaração do problema e métricas de sucesso acordadas com stakeholders.',
+    li2: isEn
+      ? 'Synthesis of user research with verbatim quotes and prioritized pains.'
+      : 'Síntese da pesquisa com usuários, citações literais e dores priorizadas.',
+    li3: isEn
+      ? 'Clickable prototype validated with at least three users.'
+      : 'Protótipo clicável validado com pelo menos três usuários.',
+    li4: isEn
+      ? 'Sliced backlog with effort, risk, and an MVP recommendation.'
+      : 'Backlog fatiado com esforço, risco e recomendação de MVP.',
+    quote: isEn
+      ? '“Discovery is not a deliverable, it is a decision. Four weeks is the smallest box that holds enough evidence to bet on.”'
+      : '“Discovery não é entregável, é decisão. Quatro semanas é a menor caixa que cabe evidência suficiente para apostar.”',
+    h3: isEn ? 'When four weeks is too long — and when it is too short' : 'Quando quatro semanas é demais — e quando é pouco',
+    p3: isEn
+      ? 'For a small internal tool with a known user base, two weeks is often enough. For regulated domains like healthcare or finance, where compliance discovery alone can take a month, expect six to eight. The principle stays the same: time-box it, write down the assumptions, and exit with a backlog the team can actually build. Discovery is the cheapest place to be wrong.'
+      : 'Para uma ferramenta interna pequena com base de usuários conhecida, duas semanas geralmente bastam. Em domínios regulados como saúde ou finanças, em que só o discovery de compliance pode levar um mês, espere seis a oito. O princípio é o mesmo: dê um time-box, escreva as hipóteses e saia com um backlog que o time consiga de fato construir. Discovery é o lugar mais barato para errar.',
+    metaDescription: isEn
+      ? 'A four-week discovery playbook for digital products: framing, research, solutioning, and convergence into a buildable MVP backlog.'
+      : 'Playbook de discovery em quatro semanas para produtos digitais: enquadramento, pesquisa, solução e convergência em um MVP pronto para construir.',
+  }
+
   return {
-    slug: 'digital-horizons',
+    slug: isEn ? 'discovery-in-4-weeks' : 'discovery-em-4-semanas',
     _status: 'published',
     authors: [author],
     content: {
@@ -23,293 +69,116 @@ export const post1: (args: PostArgs) => RequiredDataFromCollectionSlug<'posts'> 
           {
             type: 'heading',
             children: [
-              {
-                type: 'text',
-                detail: 0,
-                format: 0,
-                mode: 'normal',
-                style: '',
-                text: 'Dive into the marvels of modern innovation, where the only constant is change. A journey where pixels and data converge to craft the future.',
-                version: 1,
-              },
+              { type: 'text', detail: 0, format: 0, mode: 'normal', style: '', text: t.intro, version: 1 },
             ],
-            direction: 'ltr',
-            format: '',
-            indent: 0,
-            tag: 'h2',
-            version: 1,
-          },
-          {
-            type: 'block',
-            fields: {
-              blockName: 'Disclaimer',
-              blockType: 'banner',
-              content: {
-                root: {
-                  type: 'root',
-                  children: [
-                    {
-                      type: 'paragraph',
-                      children: [
-                        {
-                          type: 'text',
-                          detail: 0,
-                          format: 1,
-                          mode: 'normal',
-                          style: '',
-                          text: 'Disclaimer:',
-                          version: 1,
-                        },
-                        {
-                          type: 'text',
-                          detail: 0,
-                          format: 0,
-                          mode: 'normal',
-                          style: '',
-                          text: ' This content is fabricated and for demonstration purposes only. To edit this post, ',
-                          version: 1,
-                        },
-                        {
-                          type: 'link',
-                          children: [
-                            {
-                              type: 'text',
-                              detail: 0,
-                              format: 0,
-                              mode: 'normal',
-                              style: '',
-                              text: 'navigate to the admin dashboard',
-                              version: 1,
-                            },
-                          ],
-                          direction: 'ltr',
-                          fields: {
-                            linkType: 'custom',
-                            newTab: true,
-                            url: '/admin',
-                          },
-                          format: '',
-                          indent: 0,
-                          version: 3,
-                        },
-                        {
-                          type: 'text',
-                          detail: 0,
-                          format: 0,
-                          mode: 'normal',
-                          style: '',
-                          text: '.',
-                          version: 1,
-                        },
-                      ],
-                      direction: 'ltr',
-                      format: '',
-                      indent: 0,
-                      textFormat: 0,
-                      version: 1,
-                    },
-                  ],
-                  direction: 'ltr',
-                  format: '',
-                  indent: 0,
-                  version: 1,
-                },
-              },
-              style: 'info',
-            },
-            format: '',
-            version: 2,
+            direction: 'ltr', format: '', indent: 0, tag: 'h2', version: 1,
           },
           {
             type: 'heading',
             children: [
-              {
-                type: 'text',
-                detail: 0,
-                format: 0,
-                mode: 'normal',
-                style: '',
-                text: 'The Rise of AI and Machine Learning',
-                version: 1,
-              },
+              { type: 'text', detail: 0, format: 0, mode: 'normal', style: '', text: t.h1, version: 1 },
             ],
-            direction: 'ltr',
-            format: '',
-            indent: 0,
-            tag: 'h2',
-            version: 1,
+            direction: 'ltr', format: '', indent: 0, tag: 'h2', version: 1,
           },
           {
             type: 'paragraph',
             children: [
-              {
-                type: 'text',
-                detail: 0,
-                format: 0,
-                mode: 'normal',
-                style: '',
-                text: 'We find ourselves in a transformative era where artificial intelligence (AI) stands at the forefront of technological evolution. The ripple effects of its advancements are reshaping industries at an unprecedented pace. No longer are businesses bound by the limitations of tedious, manual processes. Instead, sophisticated machines, fueled by vast amounts of historical data, are now capable of making decisions previously left to human intuition. These intelligent systems are not only optimizing operations but also pioneering innovative approaches, heralding a new age of business transformation worldwide. ',
-                version: 1,
-              },
+              { type: 'text', detail: 0, format: 0, mode: 'normal', style: '', text: t.p1, version: 1 },
             ],
-            direction: 'ltr',
-            format: '',
-            indent: 0,
-            textFormat: 0,
-            version: 1,
+            direction: 'ltr', format: '', indent: 0, textFormat: 0, version: 1,
           },
           {
             type: 'heading',
             children: [
+              { type: 'text', detail: 0, format: 0, mode: 'normal', style: '', text: t.h2, version: 1 },
+            ],
+            direction: 'ltr', format: '', indent: 0, tag: 'h2', version: 1,
+          },
+          {
+            type: 'paragraph',
+            children: [
+              { type: 'text', detail: 0, format: 0, mode: 'normal', style: '', text: t.p2, version: 1 },
+            ],
+            direction: 'ltr', format: '', indent: 0, textFormat: 0, version: 1,
+          },
+          {
+            type: 'paragraph',
+            children: [
+              { type: 'text', detail: 0, format: 0, mode: 'normal', style: '', text: t.listIntro, version: 1 },
+            ],
+            direction: 'ltr', format: '', indent: 0, textFormat: 0, version: 1,
+          },
+          {
+            type: 'list',
+            children: [
               {
-                type: 'text',
-                detail: 0,
-                format: 0,
-                mode: 'normal',
-                style: '',
-                text: 'To demonstrate basic AI functionality, here is a javascript snippet that makes a POST request to a generic AI API in order to generate text based on a prompt. ',
-                version: 1,
+                type: 'listitem',
+                children: [
+                  { type: 'text', detail: 0, format: 0, mode: 'normal', style: '', text: t.li1, version: 1 },
+                ],
+                direction: 'ltr', format: '', indent: 0, value: 1, version: 1,
+              },
+              {
+                type: 'listitem',
+                children: [
+                  { type: 'text', detail: 0, format: 0, mode: 'normal', style: '', text: t.li2, version: 1 },
+                ],
+                direction: 'ltr', format: '', indent: 0, value: 2, version: 1,
+              },
+              {
+                type: 'listitem',
+                children: [
+                  { type: 'text', detail: 0, format: 0, mode: 'normal', style: '', text: t.li3, version: 1 },
+                ],
+                direction: 'ltr', format: '', indent: 0, value: 3, version: 1,
+              },
+              {
+                type: 'listitem',
+                children: [
+                  { type: 'text', detail: 0, format: 0, mode: 'normal', style: '', text: t.li4, version: 1 },
+                ],
+                direction: 'ltr', format: '', indent: 0, value: 4, version: 1,
               },
             ],
-            direction: 'ltr',
-            format: '',
-            indent: 0,
-            tag: 'h4',
-            version: 1,
+            direction: 'ltr', format: '', indent: 0, listType: 'bullet', start: 1, tag: 'ul', version: 1,
           },
           {
             type: 'block',
-            fields: {
-              blockName: 'Generate Text',
-              blockType: 'code',
-              code: "async function generateText(prompt) {\n    const apiKey = 'your-api-key';\n    const apiUrl = 'https://api.example.com/generate-text';\n\n    const response = await fetch(apiUrl, {\n        method: 'POST',\n        headers: {\n            'Content-Type': 'application/json',\n            'Authorization': `Bearer ${apiKey}`\n        },\n        body: JSON.stringify({\n            model: 'text-generation-model',\n            prompt: prompt,\n            max_tokens: 50\n        })\n    });\n\n    const data = await response.json();\n    console.log(data.choices[0].text.trim());\n}\n\n// Example usage\ngenerateText(\"Once upon a time in a faraway land,\");\n",
-              language: 'javascript',
-            },
-            format: '',
-            version: 2,
+            fields: { blockName: '', blockType: 'mediaBlock', media: blockImage.id },
+            format: '', version: 2,
+          },
+          {
+            type: 'quote',
+            children: [
+              { type: 'text', detail: 0, format: 0, mode: 'normal', style: '', text: t.quote, version: 1 },
+            ],
+            direction: 'ltr', format: '', indent: 0, version: 1,
           },
           {
             type: 'heading',
             children: [
-              {
-                type: 'text',
-                detail: 0,
-                format: 0,
-                mode: 'normal',
-                style: '',
-                text: 'IoT: Connecting the World Around Us',
-                version: 1,
-              },
+              { type: 'text', detail: 0, format: 0, mode: 'normal', style: '', text: t.h3, version: 1 },
             ],
-            direction: 'ltr',
-            format: '',
-            indent: 0,
-            tag: 'h2',
-            version: 1,
+            direction: 'ltr', format: '', indent: 0, tag: 'h2', version: 1,
           },
           {
             type: 'paragraph',
             children: [
-              {
-                type: 'text',
-                detail: 0,
-                format: 0,
-                mode: 'normal',
-                style: '',
-                text: "In today's rapidly evolving technological landscape, the Internet of Things (IoT) stands out as a revolutionary force. From transforming our residences with smart home systems to redefining transportation through connected cars, IoT's influence is palpable in nearly every facet of our daily lives.",
-                version: 1,
-              },
+              { type: 'text', detail: 0, format: 0, mode: 'normal', style: '', text: t.p3, version: 1 },
             ],
-            direction: 'ltr',
-            format: '',
-            indent: 0,
-            textFormat: 0,
-            version: 1,
-          },
-          {
-            type: 'paragraph',
-            children: [
-              {
-                type: 'text',
-                detail: 0,
-                format: 0,
-                mode: 'normal',
-                style: '',
-                text: "This technology hinges on the seamless integration of devices and systems, allowing them to communicate and collaborate effortlessly. With each connected device, we move a step closer to a world where convenience and efficiency are embedded in the very fabric of our existence. As a result, we're transitioning into an era where our surroundings intuitively respond to our needs, heralding a smarter and more interconnected global community.",
-                version: 1,
-              },
-            ],
-            direction: 'ltr',
-            format: '',
-            indent: 0,
-            textFormat: 0,
-            version: 1,
-          },
-          {
-            type: 'block',
-            fields: {
-              blockName: '',
-              blockType: 'mediaBlock',
-              media: blockImage.id,
-            },
-            format: '',
-            version: 2,
-          },
-          {
-            type: 'block',
-            fields: {
-              blockName: 'Dynamic Components',
-              blockType: 'banner',
-              content: {
-                root: {
-                  type: 'root',
-                  children: [
-                    {
-                      type: 'paragraph',
-                      children: [
-                        {
-                          type: 'text',
-                          detail: 0,
-                          format: 0,
-                          mode: 'normal',
-                          style: '',
-                          text: "This content above is completely dynamic using custom layout building blocks configured in the CMS. This can be anything you'd like from rich text and images, to highly designed, complex components.",
-                          version: 1,
-                        },
-                      ],
-                      direction: 'ltr',
-                      format: '',
-                      indent: 0,
-                      textFormat: 0,
-                      version: 1,
-                    },
-                  ],
-                  direction: 'ltr',
-                  format: '',
-                  indent: 0,
-                  version: 1,
-                },
-              },
-              style: 'info',
-            },
-            format: '',
-            version: 2,
+            direction: 'ltr', format: '', indent: 0, textFormat: 0, version: 1,
           },
         ],
-        direction: 'ltr',
-        format: '',
-        indent: 0,
-        version: 1,
+        direction: 'ltr', format: '', indent: 0, version: 1,
       },
     },
     heroImage: heroImage.id,
     meta: {
-      description:
-        'Dive into the marvels of modern innovation, where the only constant is change. A journey where pixels and data converge to craft the future.',
+      description: t.metaDescription,
       image: heroImage.id,
-      title: 'Digital Horizons: A Glimpse into Tomorrow',
+      title: t.metaTitle,
     },
-    relatedPosts: [], // this is populated by the seed script
-    title: 'Digital Horizons: A Glimpse into Tomorrow',
+    relatedPosts: [],
+    title: t.title,
   }
 }
