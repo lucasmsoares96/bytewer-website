@@ -2,6 +2,7 @@ import { createLocalReq, getPayload } from 'payload'
 import { seed } from '@/endpoints/seed'
 import config from '@payload-config'
 import { headers } from 'next/headers'
+import { revalidatePath } from 'next/cache'
 
 export const maxDuration = 300 // This function can run for a maximum of 300 seconds (5 minutes)
 
@@ -22,6 +23,12 @@ export async function POST(): Promise<Response> {
     const payloadReq = await createLocalReq({ user }, payload)
 
     await seed({ payload, req: payloadReq })
+
+    // The seed itself uses `disableRevalidate: true` on every create/update so
+    // the per-doc revalidatePage hooks don't fire. After the whole seed runs
+    // we invalidate the entire static cache once so prerendered pages
+    // (notably /[locale] which serves the home) pick up the new DB content.
+    revalidatePath('/', 'layout')
 
     return Response.json({ success: true })
   } catch (e) {
