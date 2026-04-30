@@ -1,15 +1,56 @@
-import { getServerSideSitemap } from 'next-sitemap'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { unstable_cache } from 'next/cache'
 
+type SitemapEntry = {
+  path: string
+  lastmod: string
+}
+
+const LOCALES = ['pt-BR', 'en'] as const
+const DEFAULT_LOCALE = 'pt-BR'
+
+const escapeXml = (value: string) =>
+  value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;')
+
+const buildXml = (entries: SitemapEntry[], siteUrl: string) => {
+  const urls = entries
+    .map(({ path, lastmod }) => {
+      return LOCALES.map((locale) => {
+        const loc = `${siteUrl}/${locale}${path}`
+        const alternates = LOCALES.map(
+          (alt) =>
+            `    <xhtml:link rel="alternate" hreflang="${alt}" href="${escapeXml(
+              `${siteUrl}/${alt}${path}`,
+            )}"/>`,
+        ).join('\n')
+        const xDefault = `    <xhtml:link rel="alternate" hreflang="x-default" href="${escapeXml(
+          `${siteUrl}/${DEFAULT_LOCALE}${path}`,
+        )}"/>`
+        return `  <url>
+    <loc>${escapeXml(loc)}</loc>
+    <lastmod>${escapeXml(lastmod)}</lastmod>
+${alternates}
+${xDefault}
+  </url>`
+      }).join('\n')
+    })
+    .join('\n')
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+${urls}
+</urlset>`
+}
+
 const getPostsSitemap = unstable_cache(
-  async () => {
+  async (): Promise<SitemapEntry[]> => {
     const payload = await getPayload({ config })
-    const SITE_URL =
-      process.env.NEXT_PUBLIC_SERVER_URL ||
-      process.env.VERCEL_PROJECT_PRODUCTION_URL ||
-      'https://example.com'
 
     const results = await payload.find({
       collection: 'posts',
@@ -31,11 +72,11 @@ const getPostsSitemap = unstable_cache(
 
     const dateFallback = new Date().toISOString()
 
-    const sitemap = results.docs
+    const sitemap: SitemapEntry[] = results.docs
       ? results.docs
           .filter((post) => Boolean(post?.slug))
           .map((post) => ({
-            loc: `${SITE_URL}/posts/${post?.slug}`,
+            path: `/posts/${post?.slug}`,
             lastmod: post.updatedAt || dateFallback,
           }))
       : []
@@ -49,7 +90,17 @@ const getPostsSitemap = unstable_cache(
 )
 
 export async function GET() {
-  const sitemap = await getPostsSitemap()
+  const SITE_URL =
+    process.env.NEXT_PUBLIC_SERVER_URL ||
+    process.env.VERCEL_PROJECT_PRODUCTION_URL ||
+    'https://example.com'
 
-  return getServerSideSitemap(sitemap)
+  const entries = await getPostsSitemap()
+  const xml = buildXml(entries, SITE_URL)
+
+  return new Response(xml, {
+    headers: {
+      'Content-Type': 'application/xml',
+    },
+  })
 }

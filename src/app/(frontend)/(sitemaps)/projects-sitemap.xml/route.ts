@@ -21,7 +21,7 @@ const escapeXml = (value: string) =>
 const buildXml = (entries: SitemapEntry[], siteUrl: string) => {
   const urls = entries
     .map(({ path, lastmod }) => {
-      const localeBlocks = LOCALES.map((locale) => {
+      return LOCALES.map((locale) => {
         const loc = `${siteUrl}/${locale}${path}`
         const alternates = LOCALES.map(
           (alt) =>
@@ -39,7 +39,6 @@ ${alternates}
 ${xDefault}
   </url>`
       }).join('\n')
-      return localeBlocks
     })
     .join('\n')
 
@@ -49,12 +48,12 @@ ${urls}
 </urlset>`
 }
 
-const getPagesSitemap = unstable_cache(
+const getProjectsSitemap = unstable_cache(
   async (): Promise<SitemapEntry[]> => {
     const payload = await getPayload({ config })
 
     const results = await payload.find({
-      collection: 'pages',
+      collection: 'projects',
       overrideAccess: false,
       draft: false,
       depth: 0,
@@ -73,25 +72,20 @@ const getPagesSitemap = unstable_cache(
 
     const dateFallback = new Date().toISOString()
 
-    const defaultSitemap: SitemapEntry[] = [
-      { path: '/search', lastmod: dateFallback },
-      { path: '/posts', lastmod: dateFallback },
-    ]
-
     const sitemap: SitemapEntry[] = results.docs
       ? results.docs
-          .filter((page) => Boolean(page?.slug))
-          .map((page) => ({
-            path: page?.slug === 'home' ? '/' : `/${page?.slug}`,
-            lastmod: page.updatedAt || dateFallback,
+          .filter((project) => Boolean(project?.slug))
+          .map((project) => ({
+            path: `/projetos/${project?.slug}`,
+            lastmod: project.updatedAt || dateFallback,
           }))
       : []
 
-    return [...defaultSitemap, ...sitemap]
+    return sitemap
   },
-  ['pages-sitemap'],
+  ['projects-sitemap'],
   {
-    tags: ['pages-sitemap'],
+    tags: ['projects-sitemap'],
   },
 )
 
@@ -101,7 +95,7 @@ export async function GET() {
     process.env.VERCEL_PROJECT_PRODUCTION_URL ||
     'https://example.com'
 
-  const entries = await getPagesSitemap()
+  const entries = await getProjectsSitemap()
   const xml = buildXml(entries, SITE_URL)
 
   return new Response(xml, {

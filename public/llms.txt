@@ -1,0 +1,29 @@
+# Bytewer
+
+> A software studio building digital products that solve real-world operational problems for industries like occupational health and safety, time tracking, and intelligent document automation.
+
+## About
+
+Bytewer is a Brazilian digital product agency that designs, builds, and ships web and mobile software for companies that need to digitize and automate operational workflows. We work end-to-end — from product discovery to engineering and deployment — using a stack centered on React, React Native, TypeScript, Python/FastAPI, PostgreSQL, and modern AI/LLM tooling. Content is published primarily in Brazilian Portuguese with an English fallback.
+
+## Sections / URLs
+
+- [Home](https://bytewer.com.br/pt-BR): overview of services, projects, and case studies
+- [Projetos](https://bytewer.com.br/pt-BR/projetos): portfolio of delivered products and case studies
+- [Posts](https://bytewer.com.br/pt-BR/posts): articles on product engineering, ops digitization, and case studies
+- [Contato](https://bytewer.com.br/pt-BR/contato): contact form and channels
+- [Sitemap pages](https://bytewer.com.br/pages-sitemap.xml)
+- [Sitemap posts](https://bytewer.com.br/posts-sitemap.xml)
+- [Sitemap projects](https://bytewer.com.br/projects-sitemap.xml)
+
+## Featured Case Studies
+
+- Tito — Occupational health and safety platform that consolidates SOC data into a modern analytics dashboard, with regulatory document management (PGR/PCMSO), eSocial integration, and real-time risk visibility. Stack: React, TypeScript, Python/FastAPI, PostgreSQL.
+- Locx — Intelligent automation pipeline that processes 13,000+ rental contracts using OCR plus LLMs (GPT-4) and prompt engineering, reaching 97% extraction accuracy and cutting processing time by ~90% versus manual review.
+- Ponto Eletrônico — Cross-platform electronic time-tracking system (web + React Native mobile) with facial recognition and GPS geolocation for field teams, plus an HR dashboard for journey management and payroll export.
+
+## Optional
+
+- Languages: pt-BR (primary), en (fallback)
+- Contact: contato@bytewer.com — also see https://bytewer.com.br/pt-BR/contato
+- Note: production URL `https://bytewer.com.br` is used as the canonical placeholder; no hardcoded site URL was found in the codebase configuration.
