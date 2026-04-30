@@ -1,4 +1,4 @@
-import { postgresAdapter } from '@payloadcms/db-postgres'
+import { vercelPostgresAdapter } from '@payloadcms/db-vercel-postgres'
 import sharp from 'sharp'
 import path from 'path'
 import { buildConfig, PayloadRequest } from 'payload'
@@ -8,9 +8,15 @@ import { Categories } from './collections/Categories'
 import { Media } from './collections/Media'
 import { Pages } from './collections/Pages'
 import { Posts } from './collections/Posts'
+import { Projects } from './collections/Projects'
+import { Team } from './collections/Team'
+import { Testimonials } from './collections/Testimonials'
 import { Users } from './collections/Users'
 import { Footer } from './Footer/config'
 import { Header } from './Header/config'
+import { Services } from './globals/Services/config'
+import { Toolbox } from './globals/Toolbox/config'
+import { SiteSettings } from './globals/SiteSettings/config'
 import { plugins } from './plugins'
 import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
@@ -57,14 +63,22 @@ export default buildConfig({
   },
   // This config helps us configure global or default features that the other editors can inherit
   editor: defaultLexical,
-  db: postgresAdapter({
+  db: vercelPostgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URL || '',
     },
   }),
-  collections: [Pages, Posts, Media, Categories, Users],
+  collections: [Pages, Posts, Projects, Team, Testimonials, Media, Categories, Users],
   cors: [getServerSideURL()].filter(Boolean),
-  globals: [Header, Footer],
+  globals: [Header, Footer, Services, Toolbox, SiteSettings],
+  localization: {
+    locales: [
+      { label: 'Português', code: 'pt-BR' },
+      { label: 'English', code: 'en' },
+    ],
+    defaultLocale: 'pt-BR',
+    fallback: true,
+  },
   plugins,
   secret: process.env.PAYLOAD_SECRET,
   sharp,

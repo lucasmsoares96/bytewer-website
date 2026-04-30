@@ -3,24 +3,54 @@ import { nestedDocsPlugin } from '@payloadcms/plugin-nested-docs'
 import { redirectsPlugin } from '@payloadcms/plugin-redirects'
 import { seoPlugin } from '@payloadcms/plugin-seo'
 import { searchPlugin } from '@payloadcms/plugin-search'
+import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 import { Plugin } from 'payload'
 import { revalidateRedirects } from '@/hooks/revalidateRedirects'
-import { GenerateTitle, GenerateURL } from '@payloadcms/plugin-seo/types'
+import {
+  GenerateTitle,
+  GenerateURL,
+  GenerateDescription,
+  GenerateImage,
+} from '@payloadcms/plugin-seo/types'
 import { FixedToolbarFeature, HeadingFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
 import { searchFields } from '@/search/fieldOverrides'
 import { beforeSyncWithSearch } from '@/search/beforeSync'
 
-import { Page, Post } from '@/payload-types'
+import { Page, Post, Project } from '@/payload-types'
 import { getServerSideURL } from '@/utilities/getURL'
 
-const generateTitle: GenerateTitle<Post | Page> = ({ doc }) => {
-  return doc?.title ? `${doc.title} | Payload Website Template` : 'Payload Website Template'
+type SeoDoc = Partial<Post> & Partial<Page> & Partial<Project> & Record<string, unknown>
+
+const generateTitle: GenerateTitle<Post | Page | Project> = ({ doc }) => {
+  const d = doc as SeoDoc | undefined
+  return d?.title ? `${d.title} | Bytewer` : 'Bytewer'
 }
 
-const generateURL: GenerateURL<Post | Page> = ({ doc }) => {
-  const url = getServerSideURL()
+const generateURL: GenerateURL<Post | Page | Project> = ({ doc, locale, collectionSlug }) => {
+  const baseUrl = getServerSideURL()
+  const localeStr = (locale as string | undefined) ?? 'pt-BR'
+  const d = doc as SeoDoc | undefined
+  const slug = d?.slug
+  if (!slug) return baseUrl
+  if (collectionSlug === 'posts') return `${baseUrl}/${localeStr}/posts/${slug}`
+  if (collectionSlug === 'projects') return `${baseUrl}/${localeStr}/projetos/${slug}`
+  return `${baseUrl}/${localeStr}/${slug}`
+}
 
-  return doc?.slug ? `${url}/${doc.slug}` : url
+const generateDescription: GenerateDescription<Post | Page | Project> = ({ doc }) => {
+  const d = doc as SeoDoc | undefined
+  return (d?.meta?.description as string | undefined) ?? (d?.excerpt as string | undefined) ?? ''
+}
+
+const generateImage: GenerateImage<Post | Page | Project> = ({ doc }) => {
+  const d = doc as SeoDoc | undefined
+  const img = d?.meta?.image ?? d?.heroImage ?? d?.image ?? null
+  if (img == null) return ''
+  if (typeof img === 'number' || typeof img === 'string') return img
+  if (typeof img === 'object' && img !== null && 'id' in img) {
+    return (img as { id: number | string }).id
+  }
+  return ''
 }
 
 export const plugins: Plugin[] = [
@@ -53,6 +83,21 @@ export const plugins: Plugin[] = [
   seoPlugin({
     generateTitle,
     generateURL,
+    generateDescription,
+    generateImage,
+    interfaceName: 'PageMeta',
+    fields: ({ defaultFields }) => [
+      ...defaultFields,
+      {
+        name: 'noindex',
+        type: 'checkbox',
+        label: 'Hide from search engines (noindex)',
+        defaultValue: false,
+        admin: {
+          description: 'When enabled, robots meta will be set to noindex,nofollow.',
+        },
+      },
+    ],
   }),
   formBuilderPlugin({
     fields: {
@@ -88,5 +133,12 @@ export const plugins: Plugin[] = [
         return [...defaultFields, ...searchFields]
       },
     },
+  }),
+  vercelBlobStorage({
+    enabled: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
+    collections: {
+      media: true,
+    },
+    token: process.env.BLOB_READ_WRITE_TOKEN || '',
   }),
 ]

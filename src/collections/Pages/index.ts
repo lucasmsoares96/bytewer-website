@@ -3,10 +3,25 @@ import type { CollectionConfig } from 'payload'
 import { authenticated } from '../../access/authenticated'
 import { authenticatedOrPublished } from '../../access/authenticatedOrPublished'
 import { Archive } from '../../blocks/ArchiveBlock/config'
+import { BlogBlock } from '../../blocks/BlogBlock/config'
 import { CallToAction } from '../../blocks/CallToAction/config'
 import { Content } from '../../blocks/Content/config'
 import { FormBlock } from '../../blocks/Form/config'
 import { MediaBlock } from '../../blocks/MediaBlock/config'
+import { ServicesBlock } from '../../blocks/ServicesBlock/config'
+import { DifferentialsBlock } from '../../blocks/DifferentialsBlock/config'
+import { ToolboxBlock } from '../../blocks/ToolboxBlock/config'
+import { PortfolioBlock } from '../../blocks/PortfolioBlock/config'
+import { StatsBlock } from '../../blocks/StatsBlock/config'
+import { TestimonialsBlock } from '../../blocks/TestimonialsBlock/config'
+import { TeamBlock } from '../../blocks/TeamBlock/config'
+import { CtaBlock } from '../../blocks/CtaBlock/config'
+import { ProblemBlock } from '../../blocks/ProblemBlock/config'
+import { SolutionBlock } from '../../blocks/SolutionBlock/config'
+import { AgentsBlock } from '../../blocks/AgentsBlock/config'
+import { AuthorityBlock } from '../../blocks/AuthorityBlock/config'
+import { ContactChannelsBlock } from '../../blocks/ContactChannelsBlock/config'
+import { FaqBlock } from '../../blocks/FaqBlock/config'
 import { hero } from '@/heros/config'
 import { slugField } from 'payload'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
@@ -59,6 +74,7 @@ export const Pages: CollectionConfig<'pages'> = {
       name: 'title',
       type: 'text',
       required: true,
+      localized: true,
     },
     {
       type: 'tabs',
@@ -72,7 +88,28 @@ export const Pages: CollectionConfig<'pages'> = {
             {
               name: 'layout',
               type: 'blocks',
-              blocks: [CallToAction, Content, MediaBlock, Archive, FormBlock],
+              blocks: [
+                ServicesBlock,
+                DifferentialsBlock,
+                ToolboxBlock,
+                PortfolioBlock,
+                StatsBlock,
+                TestimonialsBlock,
+                TeamBlock,
+                BlogBlock,
+                CtaBlock,
+                ProblemBlock,
+                SolutionBlock,
+                AgentsBlock,
+                AuthorityBlock,
+                ContactChannelsBlock,
+                FaqBlock,
+                CallToAction,
+                Content,
+                MediaBlock,
+                Archive,
+                FormBlock,
+              ],
               required: true,
               admin: {
                 initCollapsed: true,

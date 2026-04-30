@@ -69,6 +69,9 @@ export interface Config {
   collections: {
     pages: Page;
     posts: Post;
+    projects: Project;
+    team: Team;
+    testimonials: Testimonial;
     media: Media;
     categories: Category;
     users: User;
@@ -91,6 +94,9 @@ export interface Config {
   collectionsSelect: {
     pages: PagesSelect<false> | PagesSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
+    projects: ProjectsSelect<false> | ProjectsSelect<true>;
+    team: TeamSelect<false> | TeamSelect<true>;
+    testimonials: TestimonialsSelect<false> | TestimonialsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
@@ -108,16 +114,22 @@ export interface Config {
   db: {
     defaultIDType: number;
   };
-  fallbackLocale: null;
+  fallbackLocale: ('false' | 'none' | 'null') | false | null | ('pt-BR' | 'en') | ('pt-BR' | 'en')[];
   globals: {
     header: Header;
     footer: Footer;
+    services: Service;
+    toolbox: Toolbox;
+    siteSettings: SiteSetting;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
+    services: ServicesSelect<false> | ServicesSelect<true>;
+    toolbox: ToolboxSelect<false> | ToolboxSelect<true>;
+    siteSettings: SiteSettingsSelect<false> | SiteSettingsSelect<true>;
   };
-  locale: null;
+  locale: 'pt-BR' | 'en';
   widgets: {
     collections: CollectionsWidget;
   };
@@ -159,7 +171,26 @@ export interface Page {
   id: number;
   title: string;
   hero: {
-    type: 'none' | 'highImpact' | 'mediumImpact' | 'lowImpact';
+    type: 'none' | 'bytewer' | 'highImpact' | 'mediumImpact' | 'lowImpact';
+    title?: string | null;
+    /**
+     * Trecho destacado em gradiente, exibido após o título.
+     */
+    titleHighlight?: string | null;
+    subtitle?: string | null;
+    description?: string | null;
+    primaryCta?: {
+      label?: string | null;
+      href?: string | null;
+    };
+    secondaryCta?: {
+      label?: string | null;
+      href?: string | null;
+    };
+    /**
+     * Imagem de fundo decorativa (opcional).
+     */
+    backgroundImage?: (number | null) | Media;
     richText?: {
       root: {
         type: string;
@@ -201,7 +232,28 @@ export interface Page {
       | null;
     media?: (number | null) | Media;
   };
-  layout: (CallToActionBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock)[];
+  layout: (
+    | ServicesBlock
+    | DifferentialsBlock
+    | ToolboxBlock
+    | PortfolioBlock
+    | StatsBlock
+    | TestimonialsBlock
+    | TeamBlock
+    | BlogBlock
+    | CtaBlock
+    | ProblemBlock
+    | SolutionBlock
+    | AgentsBlock
+    | AuthorityBlock
+    | ContactChannelsBlock
+    | FaqBlock
+    | CallToActionBlock
+    | ContentBlock
+    | MediaBlock
+    | ArchiveBlock
+    | FormBlock
+  )[];
   meta?: {
     title?: string | null;
     /**
@@ -211,56 +263,6 @@ export interface Page {
     description?: string | null;
   };
   publishedAt?: string | null;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
-  updatedAt: string;
-  createdAt: string;
-  _status?: ('draft' | 'published') | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "posts".
- */
-export interface Post {
-  id: number;
-  title: string;
-  heroImage?: (number | null) | Media;
-  content: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
-  relatedPosts?: (number | Post)[] | null;
-  categories?: (number | Category)[] | null;
-  meta?: {
-    title?: string | null;
-    /**
-     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
-     */
-    image?: (number | null) | Media;
-    description?: string | null;
-  };
-  publishedAt?: string | null;
-  authors?: (number | User)[] | null;
-  populatedAuthors?:
-    | {
-        id?: string | null;
-        name?: string | null;
-      }[]
-    | null;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
@@ -391,6 +393,56 @@ export interface FolderInterface {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "posts".
+ */
+export interface Post {
+  id: number;
+  title: string;
+  heroImage?: (number | null) | Media;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  relatedPosts?: (number | Post)[] | null;
+  categories?: (number | Category)[] | null;
+  meta?: {
+    title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+    description?: string | null;
+  };
+  publishedAt?: string | null;
+  authors?: (number | User)[] | null;
+  populatedAuthors?:
+    | {
+        id?: string | null;
+        name?: string | null;
+      }[]
+    | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "categories".
  */
 export interface Category {
@@ -438,6 +490,485 @@ export interface User {
     | null;
   password?: string | null;
   collection: 'users';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ServicesBlock".
+ */
+export interface ServicesBlock {
+  /**
+   * ID âncora para navegação interna.
+   */
+  anchor?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'servicesBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "DifferentialsBlock".
+ */
+export interface DifferentialsBlock {
+  anchor?: string | null;
+  badge?: string | null;
+  heading?: string | null;
+  headingHighlight?: string | null;
+  subtitle?: string | null;
+  items?:
+    | {
+        iconName?:
+          | (
+              | 'Activity'
+              | 'BarChart'
+              | 'BellRing'
+              | 'Bot'
+              | 'CalendarCheck'
+              | 'CalendarX2'
+              | 'CheckCircle2'
+              | 'Clock'
+              | 'Code'
+              | 'Cpu'
+              | 'Database'
+              | 'GitBranch'
+              | 'Lightbulb'
+              | 'Mail'
+              | 'MessageSquare'
+              | 'PhoneCall'
+              | 'Repeat'
+              | 'Rocket'
+              | 'Server'
+              | 'Settings'
+              | 'ShieldCheck'
+              | 'Smartphone'
+              | 'Target'
+              | 'Terminal'
+              | 'TrendingUp'
+              | 'UserCheck'
+              | 'Users'
+              | 'Zap'
+            )
+          | null;
+        title?: string | null;
+        description?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'differentialsBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ToolboxBlock".
+ */
+export interface ToolboxBlock {
+  anchor?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'toolboxBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PortfolioBlock".
+ */
+export interface PortfolioBlock {
+  anchor?: string | null;
+  badge?: string | null;
+  heading?: string | null;
+  headingHighlight?: string | null;
+  subtitle?: string | null;
+  /**
+   * Selecione projetos a exibir, na ordem desejada.
+   */
+  projects?: (number | Project)[] | null;
+  viewAllLabel?: string | null;
+  viewAllHref?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'portfolioBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "projects".
+ */
+export interface Project {
+  id: number;
+  title: string;
+  description: string;
+  image: number | Media;
+  features?:
+    | {
+        feature: string;
+        id?: string | null;
+      }[]
+    | null;
+  fullDescription?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  challenge?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  solution?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  results?:
+    | {
+        result: string;
+        id?: string | null;
+      }[]
+    | null;
+  technologies?:
+    | {
+        name: string;
+        id?: string | null;
+      }[]
+    | null;
+  duration?: string | null;
+  team?: string | null;
+  meta?: {
+    title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+    description?: string | null;
+  };
+  publishedAt?: string | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StatsBlock".
+ */
+export interface StatsBlock {
+  anchor?: string | null;
+  heading?: string | null;
+  subtitle?: string | null;
+  items?:
+    | {
+        value: string;
+        suffix?: string | null;
+        label?: string | null;
+        source?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'statsBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TestimonialsBlock".
+ */
+export interface TestimonialsBlock {
+  anchor?: string | null;
+  badge?: string | null;
+  heading?: string | null;
+  subtitle?: string | null;
+  items?:
+    | {
+        quote?: string | null;
+        author: string;
+        role?: string | null;
+        photo?: (number | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'testimonialsBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TeamBlock".
+ */
+export interface TeamBlock {
+  anchor?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'teamBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "BlogBlock".
+ */
+export interface BlogBlock {
+  anchor?: string | null;
+  badge?: string | null;
+  heading?: string | null;
+  headingHighlight?: string | null;
+  subtitle?: string | null;
+  /**
+   * Número de posts para exibir.
+   */
+  limit?: number | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'blogBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CtaBlock".
+ */
+export interface CtaBlock {
+  anchor?: string | null;
+  badge?: string | null;
+  title?: string | null;
+  titleHighlight?: string | null;
+  description?: string | null;
+  buttonLabel?: string | null;
+  buttonHref?: string | null;
+  disclaimer?: string | null;
+  channelLabel?: string | null;
+  channels?:
+    | {
+        type: 'whatsapp' | 'messenger' | 'instagram' | 'email';
+        label?: string | null;
+        href: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'ctaBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ProblemBlock".
+ */
+export interface ProblemBlock {
+  anchor?: string | null;
+  title?: string | null;
+  titleHighlight?: string | null;
+  items?:
+    | {
+        item?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  quote?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'problemBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SolutionBlock".
+ */
+export interface SolutionBlock {
+  anchor?: string | null;
+  title?: string | null;
+  titleHighlight?: string | null;
+  description?: string | null;
+  cards?:
+    | {
+        iconName?:
+          | (
+              | 'Activity'
+              | 'BarChart'
+              | 'BellRing'
+              | 'Bot'
+              | 'CalendarCheck'
+              | 'CalendarX2'
+              | 'CheckCircle2'
+              | 'Clock'
+              | 'Code'
+              | 'Cpu'
+              | 'Database'
+              | 'GitBranch'
+              | 'Lightbulb'
+              | 'Mail'
+              | 'MessageSquare'
+              | 'PhoneCall'
+              | 'Repeat'
+              | 'Rocket'
+              | 'Server'
+              | 'Settings'
+              | 'ShieldCheck'
+              | 'Smartphone'
+              | 'Target'
+              | 'Terminal'
+              | 'TrendingUp'
+              | 'UserCheck'
+              | 'Users'
+              | 'Zap'
+            )
+          | null;
+        title?: string | null;
+        description?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'solutionBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "AgentsBlock".
+ */
+export interface AgentsBlock {
+  anchor?: string | null;
+  title?: string | null;
+  titleHighlight?: string | null;
+  subtitle?: string | null;
+  agents?:
+    | {
+        iconName?:
+          | (
+              | 'Activity'
+              | 'BarChart'
+              | 'BellRing'
+              | 'Bot'
+              | 'CalendarCheck'
+              | 'CalendarX2'
+              | 'CheckCircle2'
+              | 'Clock'
+              | 'Code'
+              | 'Cpu'
+              | 'Database'
+              | 'GitBranch'
+              | 'Lightbulb'
+              | 'Mail'
+              | 'MessageSquare'
+              | 'PhoneCall'
+              | 'Repeat'
+              | 'Rocket'
+              | 'Server'
+              | 'Settings'
+              | 'ShieldCheck'
+              | 'Smartphone'
+              | 'Target'
+              | 'Terminal'
+              | 'TrendingUp'
+              | 'UserCheck'
+              | 'Users'
+              | 'Zap'
+            )
+          | null;
+        title?: string | null;
+        description?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'agentsBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "AuthorityBlock".
+ */
+export interface AuthorityBlock {
+  anchor?: string | null;
+  title?: string | null;
+  titleHighlight?: string | null;
+  subtitle?: string | null;
+  stats?:
+    | {
+        value: string;
+        label?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'authorityBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContactChannelsBlock".
+ */
+export interface ContactChannelsBlock {
+  anchor?: string | null;
+  title?: string | null;
+  description?: string | null;
+  channels?:
+    | {
+        type: 'whatsapp' | 'messenger' | 'instagram' | 'email';
+        label?: string | null;
+        href: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'contactChannelsBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FaqBlock".
+ */
+export interface FaqBlock {
+  anchor?: string | null;
+  heading: string;
+  subheading?: string | null;
+  items: {
+    question: string;
+    answer: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    };
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'faq';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -783,6 +1314,39 @@ export interface Form {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "team".
+ */
+export interface Team {
+  id: number;
+  name: string;
+  role: string;
+  bio?: string | null;
+  photo: number | Media;
+  email?: string | null;
+  github?: string | null;
+  linkedin?: string | null;
+  /**
+   * Ordem de exibição no site
+   */
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonials".
+ */
+export interface Testimonial {
+  id: number;
+  quote: string;
+  author: string;
+  role?: string | null;
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -980,6 +1544,18 @@ export interface PayloadLockedDocument {
         value: number | Post;
       } | null)
     | ({
+        relationTo: 'projects';
+        value: number | Project;
+      } | null)
+    | ({
+        relationTo: 'team';
+        value: number | Team;
+      } | null)
+    | ({
+        relationTo: 'testimonials';
+        value: number | Testimonial;
+      } | null)
+    | ({
         relationTo: 'media';
         value: number | Media;
       } | null)
@@ -1063,6 +1639,23 @@ export interface PagesSelect<T extends boolean = true> {
     | T
     | {
         type?: T;
+        title?: T;
+        titleHighlight?: T;
+        subtitle?: T;
+        description?: T;
+        primaryCta?:
+          | T
+          | {
+              label?: T;
+              href?: T;
+            };
+        secondaryCta?:
+          | T
+          | {
+              label?: T;
+              href?: T;
+            };
+        backgroundImage?: T;
         richText?: T;
         links?:
           | T
@@ -1084,6 +1677,21 @@ export interface PagesSelect<T extends boolean = true> {
   layout?:
     | T
     | {
+        servicesBlock?: T | ServicesBlockSelect<T>;
+        differentialsBlock?: T | DifferentialsBlockSelect<T>;
+        toolboxBlock?: T | ToolboxBlockSelect<T>;
+        portfolioBlock?: T | PortfolioBlockSelect<T>;
+        statsBlock?: T | StatsBlockSelect<T>;
+        testimonialsBlock?: T | TestimonialsBlockSelect<T>;
+        teamBlock?: T | TeamBlockSelect<T>;
+        blogBlock?: T | BlogBlockSelect<T>;
+        ctaBlock?: T | CtaBlockSelect<T>;
+        problemBlock?: T | ProblemBlockSelect<T>;
+        solutionBlock?: T | SolutionBlockSelect<T>;
+        agentsBlock?: T | AgentsBlockSelect<T>;
+        authorityBlock?: T | AuthorityBlockSelect<T>;
+        contactChannelsBlock?: T | ContactChannelsBlockSelect<T>;
+        faq?: T | FaqBlockSelect<T>;
         cta?: T | CallToActionBlockSelect<T>;
         content?: T | ContentBlockSelect<T>;
         mediaBlock?: T | MediaBlockSelect<T>;
@@ -1103,6 +1711,264 @@ export interface PagesSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ServicesBlock_select".
+ */
+export interface ServicesBlockSelect<T extends boolean = true> {
+  anchor?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "DifferentialsBlock_select".
+ */
+export interface DifferentialsBlockSelect<T extends boolean = true> {
+  anchor?: T;
+  badge?: T;
+  heading?: T;
+  headingHighlight?: T;
+  subtitle?: T;
+  items?:
+    | T
+    | {
+        iconName?: T;
+        title?: T;
+        description?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ToolboxBlock_select".
+ */
+export interface ToolboxBlockSelect<T extends boolean = true> {
+  anchor?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PortfolioBlock_select".
+ */
+export interface PortfolioBlockSelect<T extends boolean = true> {
+  anchor?: T;
+  badge?: T;
+  heading?: T;
+  headingHighlight?: T;
+  subtitle?: T;
+  projects?: T;
+  viewAllLabel?: T;
+  viewAllHref?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StatsBlock_select".
+ */
+export interface StatsBlockSelect<T extends boolean = true> {
+  anchor?: T;
+  heading?: T;
+  subtitle?: T;
+  items?:
+    | T
+    | {
+        value?: T;
+        suffix?: T;
+        label?: T;
+        source?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TestimonialsBlock_select".
+ */
+export interface TestimonialsBlockSelect<T extends boolean = true> {
+  anchor?: T;
+  badge?: T;
+  heading?: T;
+  subtitle?: T;
+  items?:
+    | T
+    | {
+        quote?: T;
+        author?: T;
+        role?: T;
+        photo?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TeamBlock_select".
+ */
+export interface TeamBlockSelect<T extends boolean = true> {
+  anchor?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "BlogBlock_select".
+ */
+export interface BlogBlockSelect<T extends boolean = true> {
+  anchor?: T;
+  badge?: T;
+  heading?: T;
+  headingHighlight?: T;
+  subtitle?: T;
+  limit?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CtaBlock_select".
+ */
+export interface CtaBlockSelect<T extends boolean = true> {
+  anchor?: T;
+  badge?: T;
+  title?: T;
+  titleHighlight?: T;
+  description?: T;
+  buttonLabel?: T;
+  buttonHref?: T;
+  disclaimer?: T;
+  channelLabel?: T;
+  channels?:
+    | T
+    | {
+        type?: T;
+        label?: T;
+        href?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ProblemBlock_select".
+ */
+export interface ProblemBlockSelect<T extends boolean = true> {
+  anchor?: T;
+  title?: T;
+  titleHighlight?: T;
+  items?:
+    | T
+    | {
+        item?: T;
+        id?: T;
+      };
+  quote?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SolutionBlock_select".
+ */
+export interface SolutionBlockSelect<T extends boolean = true> {
+  anchor?: T;
+  title?: T;
+  titleHighlight?: T;
+  description?: T;
+  cards?:
+    | T
+    | {
+        iconName?: T;
+        title?: T;
+        description?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "AgentsBlock_select".
+ */
+export interface AgentsBlockSelect<T extends boolean = true> {
+  anchor?: T;
+  title?: T;
+  titleHighlight?: T;
+  subtitle?: T;
+  agents?:
+    | T
+    | {
+        iconName?: T;
+        title?: T;
+        description?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "AuthorityBlock_select".
+ */
+export interface AuthorityBlockSelect<T extends boolean = true> {
+  anchor?: T;
+  title?: T;
+  titleHighlight?: T;
+  subtitle?: T;
+  stats?:
+    | T
+    | {
+        value?: T;
+        label?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContactChannelsBlock_select".
+ */
+export interface ContactChannelsBlockSelect<T extends boolean = true> {
+  anchor?: T;
+  title?: T;
+  description?: T;
+  channels?:
+    | T
+    | {
+        type?: T;
+        label?: T;
+        href?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FaqBlock_select".
+ */
+export interface FaqBlockSelect<T extends boolean = true> {
+  anchor?: T;
+  heading?: T;
+  subheading?: T;
+  items?:
+    | T
+    | {
+        question?: T;
+        answer?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1218,6 +2084,79 @@ export interface PostsSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "projects_select".
+ */
+export interface ProjectsSelect<T extends boolean = true> {
+  title?: T;
+  description?: T;
+  image?: T;
+  features?:
+    | T
+    | {
+        feature?: T;
+        id?: T;
+      };
+  fullDescription?: T;
+  challenge?: T;
+  solution?: T;
+  results?:
+    | T
+    | {
+        result?: T;
+        id?: T;
+      };
+  technologies?:
+    | T
+    | {
+        name?: T;
+        id?: T;
+      };
+  duration?: T;
+  team?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        image?: T;
+        description?: T;
+      };
+  publishedAt?: T;
+  generateSlug?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "team_select".
+ */
+export interface TeamSelect<T extends boolean = true> {
+  name?: T;
+  role?: T;
+  bio?: T;
+  photo?: T;
+  email?: T;
+  github?: T;
+  linkedin?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonials_select".
+ */
+export interface TestimonialsSelect<T extends boolean = true> {
+  quote?: T;
+  author?: T;
+  role?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1666,26 +2605,186 @@ export interface Header {
  */
 export interface Footer {
   id: number;
-  navItems?:
+  columns?:
     | {
-        link: {
-          type?: ('reference' | 'custom') | null;
-          newTab?: boolean | null;
-          reference?:
-            | ({
-                relationTo: 'pages';
-                value: number | Page;
-              } | null)
-            | ({
-                relationTo: 'posts';
-                value: number | Post;
-              } | null);
-          url?: string | null;
-          label: string;
-        };
+        label: string;
+        navItems?:
+          | {
+              link: {
+                type?: ('reference' | 'custom') | null;
+                newTab?: boolean | null;
+                reference?:
+                  | ({
+                      relationTo: 'pages';
+                      value: number | Page;
+                    } | null)
+                  | ({
+                      relationTo: 'posts';
+                      value: number | Post;
+                    } | null);
+                url?: string | null;
+                label: string;
+              };
+              id?: string | null;
+            }[]
+          | null;
         id?: string | null;
       }[]
     | null;
+  copyright?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "services".
+ */
+export interface Service {
+  id: number;
+  heading?: string | null;
+  headingHighlight?: string | null;
+  subtitle?: string | null;
+  items?:
+    | {
+        iconName?:
+          | (
+              | 'Activity'
+              | 'BarChart'
+              | 'BellRing'
+              | 'Bot'
+              | 'CalendarCheck'
+              | 'CalendarX2'
+              | 'CheckCircle2'
+              | 'Clock'
+              | 'Code'
+              | 'Cpu'
+              | 'Database'
+              | 'GitBranch'
+              | 'Lightbulb'
+              | 'Mail'
+              | 'MessageSquare'
+              | 'PhoneCall'
+              | 'Repeat'
+              | 'Rocket'
+              | 'Server'
+              | 'Settings'
+              | 'ShieldCheck'
+              | 'Smartphone'
+              | 'Target'
+              | 'Terminal'
+              | 'TrendingUp'
+              | 'UserCheck'
+              | 'Users'
+              | 'Zap'
+            )
+          | null;
+        title?: string | null;
+        description?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "toolbox".
+ */
+export interface Toolbox {
+  id: number;
+  badge?: string | null;
+  heading?: string | null;
+  headingHighlight?: string | null;
+  subtitle?: string | null;
+  categories?:
+    | {
+        category?: string | null;
+        iconName?:
+          | (
+              | 'Activity'
+              | 'BarChart'
+              | 'BellRing'
+              | 'Bot'
+              | 'CalendarCheck'
+              | 'CalendarX2'
+              | 'CheckCircle2'
+              | 'Clock'
+              | 'Code'
+              | 'Cpu'
+              | 'Database'
+              | 'GitBranch'
+              | 'Lightbulb'
+              | 'Mail'
+              | 'MessageSquare'
+              | 'PhoneCall'
+              | 'Repeat'
+              | 'Rocket'
+              | 'Server'
+              | 'Settings'
+              | 'ShieldCheck'
+              | 'Smartphone'
+              | 'Target'
+              | 'Terminal'
+              | 'TrendingUp'
+              | 'UserCheck'
+              | 'Users'
+              | 'Zap'
+            )
+          | null;
+        items?:
+          | {
+              name: string;
+              logo?: (number | null) | Media;
+              /**
+               * URL externa para o logo (ex: CDN)
+               */
+              externalLogoUrl?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "siteSettings".
+ */
+export interface SiteSetting {
+  id: number;
+  logo?: (number | null) | Media;
+  /**
+   * Versão clara do logo, para fundos escuros.
+   */
+  logoLight?: (number | null) | Media;
+  tagline?: string | null;
+  seo?: {
+    siteName?: string | null;
+    metaTitle?: string | null;
+    metaDescription?: string | null;
+    /**
+     * Imagem padrão para compartilhamento (1200x630).
+     */
+    ogImage?: (number | null) | Media;
+    /**
+     * Favicon do site (.ico, .svg ou .png).
+     */
+    favicon?: (number | null) | Media;
+    /**
+     * Ex.: @bytewer
+     */
+    twitterHandle?: string | null;
+  };
+  socials?: {
+    linkedin?: string | null;
+    instagram?: string | null;
+    youtube?: string | null;
+    twitter?: string | null;
+    reddit?: string | null;
+    github?: string | null;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1717,19 +2816,106 @@ export interface HeaderSelect<T extends boolean = true> {
  * via the `definition` "footer_select".
  */
 export interface FooterSelect<T extends boolean = true> {
-  navItems?:
+  columns?:
     | T
     | {
-        link?:
+        label?: T;
+        navItems?:
           | T
           | {
-              type?: T;
-              newTab?: T;
-              reference?: T;
-              url?: T;
-              label?: T;
+              link?:
+                | T
+                | {
+                    type?: T;
+                    newTab?: T;
+                    reference?: T;
+                    url?: T;
+                    label?: T;
+                  };
+              id?: T;
             };
         id?: T;
+      };
+  copyright?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "services_select".
+ */
+export interface ServicesSelect<T extends boolean = true> {
+  heading?: T;
+  headingHighlight?: T;
+  subtitle?: T;
+  items?:
+    | T
+    | {
+        iconName?: T;
+        title?: T;
+        description?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "toolbox_select".
+ */
+export interface ToolboxSelect<T extends boolean = true> {
+  badge?: T;
+  heading?: T;
+  headingHighlight?: T;
+  subtitle?: T;
+  categories?:
+    | T
+    | {
+        category?: T;
+        iconName?: T;
+        items?:
+          | T
+          | {
+              name?: T;
+              logo?: T;
+              externalLogoUrl?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "siteSettings_select".
+ */
+export interface SiteSettingsSelect<T extends boolean = true> {
+  logo?: T;
+  logoLight?: T;
+  tagline?: T;
+  seo?:
+    | T
+    | {
+        siteName?: T;
+        metaTitle?: T;
+        metaDescription?: T;
+        ogImage?: T;
+        favicon?: T;
+        twitterHandle?: T;
+      };
+  socials?:
+    | T
+    | {
+        linkedin?: T;
+        instagram?: T;
+        youtube?: T;
+        twitter?: T;
+        reddit?: T;
+        github?: T;
       };
   updatedAt?: T;
   createdAt?: T;
@@ -1761,6 +2947,10 @@ export interface TaskSchedulePublish {
       | ({
           relationTo: 'posts';
           value: number | Post;
+        } | null)
+      | ({
+          relationTo: 'projects';
+          value: number | Project;
         } | null);
     global?: string | null;
     user?: (number | null) | User;

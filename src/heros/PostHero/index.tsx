@@ -1,4 +1,3 @@
-import { formatDateTime } from 'src/utilities/formatDateTime'
 import React from 'react'
 
 import type { Post } from '@/payload-types'
@@ -6,17 +5,35 @@ import type { Post } from '@/payload-types'
 import { Media } from '@/components/Media'
 import { formatAuthors } from '@/utilities/formatAuthors'
 
+const intlLocaleFor = (locale?: string) => (locale === 'pt-BR' ? 'pt-BR' : 'en-US')
+
+const formatPublishedAt = (timestamp: string, locale?: string): string => {
+  try {
+    return new Intl.DateTimeFormat(intlLocaleFor(locale), {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric',
+    }).format(new Date(timestamp))
+  } catch {
+    return ''
+  }
+}
+
 export const PostHero: React.FC<{
   post: Post
-}> = ({ post }) => {
+  locale?: string
+}> = ({ post, locale }) => {
   const { categories, heroImage, populatedAuthors, publishedAt, title } = post
 
   const hasAuthors =
     populatedAuthors && populatedAuthors.length > 0 && formatAuthors(populatedAuthors) !== ''
+  const isPt = locale === 'pt-BR'
+  const authorLabel = isPt ? 'Autor' : 'Author'
+  const dateLabel = isPt ? 'Publicado em' : 'Date Published'
 
   return (
     <div className="relative -mt-[10.4rem] flex items-end">
-      <div className="container z-10 relative lg:grid lg:grid-cols-[1fr_48rem_1fr] text-white pb-8">
+      <div className="container px-4 md:px-8 z-10 relative lg:grid lg:grid-cols-[1fr_48rem_1fr] text-white pb-8">
         <div className="col-start-1 col-span-1 md:col-start-2 md:col-span-2">
           <div className="uppercase text-sm mb-6">
             {categories?.map((category, index) => {
@@ -46,17 +63,19 @@ export const PostHero: React.FC<{
             {hasAuthors && (
               <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-1">
-                  <p className="text-sm">Author</p>
+                  <p className="text-sm text-white/60">{authorLabel}</p>
 
-                  <p>{formatAuthors(populatedAuthors)}</p>
+                  <p className="font-medium">{formatAuthors(populatedAuthors)}</p>
                 </div>
               </div>
             )}
             {publishedAt && (
               <div className="flex flex-col gap-1">
-                <p className="text-sm">Date Published</p>
+                <p className="text-sm text-white/60">{dateLabel}</p>
 
-                <time dateTime={publishedAt}>{formatDateTime(publishedAt)}</time>
+                <time className="font-medium" dateTime={publishedAt}>
+                  {formatPublishedAt(publishedAt, locale)}
+                </time>
               </div>
             )}
           </div>
