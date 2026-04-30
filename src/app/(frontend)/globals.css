@@ -44,14 +44,20 @@
   --breakpoint-xl: 80rem;
   --breakpoint-2xl: 86rem;
   --font-mono: var(--font-geist-mono);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-inter), var(--font-geist-sans);
+
+  /* Bytewer brand palette (primary = #5B4EFF) — used by section blocks. */
+  --color-brand: oklch(57.75% 0.246 270deg);
+  --color-brand-foreground: oklch(98.5% 0 0deg);
+  --color-brand-muted: oklch(57.75% 0.246 270deg / 0.1);
+  --color-bytewer-bg: oklch(8% 0.01 270deg);
+  --color-bytewer-surface: oklch(13% 0.02 270deg);
 }
 
 @layer utilities {
   .container {
     width: 100%;
     margin-inline: auto;
-    padding-inline: 1rem;
   }
 
   @variant sm {
@@ -63,7 +69,6 @@
   @variant md {
     .container {
       max-width: var(--breakpoint-md);
-      padding-inline: 2rem;
     }
   }
 
@@ -216,6 +221,35 @@
 
 html {
   opacity: 0;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #5b4eff;
+}
+
+.custom-testimonial-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-testimonial-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+.custom-testimonial-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(120, 120, 120, 0.4);
+  border-radius: 10px;
+}
+.custom-testimonial-scrollbar:hover::-webkit-scrollbar-thumb {
+  background: rgba(91, 78, 255, 0.6);
 }
 
 html[data-theme='dark'],

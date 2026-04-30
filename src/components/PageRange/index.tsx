@@ -1,14 +1,15 @@
 import React from 'react'
+import type { TypedLocale } from 'payload'
 
 const defaultLabels = {
-  plural: 'Docs',
-  singular: 'Doc',
+  'pt-BR': { plural: 'Docs', singular: 'Doc' },
+  en: { plural: 'Docs', singular: 'Doc' },
 }
 
 const defaultCollectionLabels = {
   posts: {
-    plural: 'Posts',
-    singular: 'Post',
+    'pt-BR': { plural: 'Posts', singular: 'Post' },
+    en: { plural: 'Posts', singular: 'Post' },
   },
 }
 
@@ -21,6 +22,7 @@ export const PageRange: React.FC<{
   }
   currentPage?: number
   limit?: number
+  locale?: TypedLocale
   totalDocs?: number
 }> = (props) => {
   const {
@@ -29,8 +31,11 @@ export const PageRange: React.FC<{
     collectionLabels: collectionLabelsFromProps,
     currentPage,
     limit,
+    locale,
     totalDocs,
   } = props
+  const isEn = String(locale) === 'en'
+  const localeKey: 'pt-BR' | 'en' = isEn ? 'en' : 'pt-BR'
 
   let indexStart = (currentPage ? currentPage - 1 : 1) * (limit || 1) + 1
   if (totalDocs && indexStart > totalDocs) indexStart = 0
@@ -40,16 +45,20 @@ export const PageRange: React.FC<{
 
   const { plural, singular } =
     collectionLabelsFromProps ||
-    (collection ? defaultCollectionLabels[collection] : undefined) ||
-    defaultLabels ||
+    (collection ? defaultCollectionLabels[collection][localeKey] : undefined) ||
+    defaultLabels[localeKey] ||
     {}
+
+  const noResults = isEn ? 'Search produced no results.' : 'A busca não retornou resultados.'
+  const showing = isEn ? 'Showing' : 'Mostrando'
+  const of = isEn ? 'of' : 'de'
 
   return (
     <div className={[className, 'font-semibold'].filter(Boolean).join(' ')}>
-      {(typeof totalDocs === 'undefined' || totalDocs === 0) && 'Search produced no results.'}
+      {(typeof totalDocs === 'undefined' || totalDocs === 0) && noResults}
       {typeof totalDocs !== 'undefined' &&
         totalDocs > 0 &&
-        `Showing ${indexStart}${indexStart > 0 ? ` - ${indexEnd}` : ''} of ${totalDocs} ${
+        `${showing} ${indexStart}${indexStart > 0 ? ` - ${indexEnd}` : ''} ${of} ${totalDocs} ${
           totalDocs > 1 ? plural : singular
         }`}
     </div>
