@@ -24,3 +24,15 @@ node_modules/
 
 tsconfig.tsbuildinfo
 PROMPT.md
+
+# Local screenshot artifacts produced during visual QA.
+expected-*.png
+current-*.png
+final-*.png
+
+# Gemini CLI scratch
+.gemini/tmp/
+
+# Claude Code runtime
+.claude/scheduled_tasks.lock
+.env*.local
