@@ -37,7 +37,7 @@ export const BytewerHero: React.FC<Props> = ({
   const bg = typeof backgroundImage === 'object' ? (backgroundImage as Media | null) : null
 
   return (
-    <section className="relative min-h-screen w-full overflow-hidden bg-bytewer-bg pt-32 pb-12 md:pt-40 md:pb-32 px-6 text-white">
+    <section className="relative min-h-screen w-full overflow-hidden bg-bytewer-bg flex flex-col justify-center pt-20 pb-12 px-6 text-white">
       <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-brand/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3 pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-blue-600/5 rounded-full blur-[100px] translate-y-1/3 -translate-x-1/4 pointer-events-none" />
 
