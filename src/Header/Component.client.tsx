@@ -82,7 +82,7 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data, locale, adminB
         }`}
       >
         <div className="mx-auto max-w-[1400px] px-6 flex items-center justify-between relative">
-        <Link href="/" className="z-50 block group">
+        <Link href="/" className="z-50 block group" aria-label="Bytewer — página inicial">
           <Logo variant="white" className="w-36 md:w-40 h-auto" />
         </Link>
 
@@ -138,6 +138,8 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data, locale, adminB
         <button
           className="md:hidden text-white z-50 p-2"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          aria-label={isMobileMenuOpen ? 'Fechar menu' : 'Abrir menu'}
+          aria-expanded={isMobileMenuOpen}
         >
           {isMobileMenuOpen ? <X /> : <Menu />}
         </button>

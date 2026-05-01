@@ -95,7 +95,7 @@ export default async function RootLayout({ children, params }: Props) {
         <JsonLd data={websiteLd} />
         <Providers>
           <Header locale={typedLocale} />
-          {children}
+          <main>{children}</main>
           <Footer locale={typedLocale} />
         </Providers>
       </body>

@@ -28,7 +28,7 @@ export async function Footer({ locale }: { locale?: TypedLocale } = {}) {
       <div className="mx-auto max-w-[1400px]">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-12 mb-16">
           <div className="lg:col-span-2">
-            <Link href="/" className="block mb-6 group transition-transform duration-300 hover:scale-105 origin-left">
+            <Link href="/" className="block mb-6 group transition-transform duration-300 hover:scale-105 origin-left" aria-label="Bytewer — página inicial">
               <Logo variant="white" className="w-32 md:w-36 h-auto" />
             </Link>
             {settings?.tagline && <p className="text-gray-400 mb-8 max-w-xs leading-relaxed">{settings.tagline}</p>}
@@ -39,6 +39,7 @@ export async function Footer({ locale }: { locale?: TypedLocale } = {}) {
                     href={socials.linkedin}
                     target="_blank"
                     rel="noopener noreferrer"
+                    aria-label="LinkedIn"
                     className="p-2.5 bg-white/5 rounded-full hover:bg-brand transition-all hover:scale-110 text-white"
                   >
                     <Linkedin className="w-5 h-5" />
@@ -49,6 +50,7 @@ export async function Footer({ locale }: { locale?: TypedLocale } = {}) {
                     href={socials.instagram}
                     target="_blank"
                     rel="noopener noreferrer"
+                    aria-label="Instagram"
                     className="p-2.5 bg-white/5 rounded-full hover:bg-brand transition-all hover:scale-110 text-white"
                   >
                     <Instagram className="w-5 h-5" />
@@ -59,6 +61,7 @@ export async function Footer({ locale }: { locale?: TypedLocale } = {}) {
                     href={socials.youtube}
                     target="_blank"
                     rel="noopener noreferrer"
+                    aria-label="YouTube"
                     className="p-2.5 bg-white/5 rounded-full hover:bg-brand transition-all hover:scale-110 text-white"
                   >
                     <FaYoutube size={20} />
@@ -69,6 +72,7 @@ export async function Footer({ locale }: { locale?: TypedLocale } = {}) {
                     href={socials.twitter}
                     target="_blank"
                     rel="noopener noreferrer"
+                    aria-label="Twitter / X"
                     className="p-2.5 bg-white/5 rounded-full hover:bg-brand transition-all hover:scale-110 text-white"
                   >
                     <FaTwitter size={20} />
@@ -79,6 +83,7 @@ export async function Footer({ locale }: { locale?: TypedLocale } = {}) {
                     href={socials.reddit}
                     target="_blank"
                     rel="noopener noreferrer"
+                    aria-label="Reddit"
                     className="p-2.5 bg-white/5 rounded-full hover:bg-brand transition-all hover:scale-110 text-white"
                   >
                     <FaReddit size={20} />
@@ -89,6 +94,7 @@ export async function Footer({ locale }: { locale?: TypedLocale } = {}) {
                     href={socials.github}
                     target="_blank"
                     rel="noopener noreferrer"
+                    aria-label="GitHub"
                     className="p-2.5 bg-white/5 rounded-full hover:bg-brand transition-all hover:scale-110 text-white"
                   >
                     <FaGithub size={20} />
@@ -100,7 +106,7 @@ export async function Footer({ locale }: { locale?: TypedLocale } = {}) {
 
           {columns.map((col, i) => (
             <div key={i}>
-              <h4 className="font-bold text-lg mb-8 text-white/90">{col.label}</h4>
+              <h3 className="font-bold text-lg mb-8 text-white/90">{col.label}</h3>
               <ul className="space-y-4">
                 {col.navItems?.map(({ link }, j) => (
                   <li key={j}>
@@ -116,7 +122,7 @@ export async function Footer({ locale }: { locale?: TypedLocale } = {}) {
           ))}
         </div>
 
-        <div className="border-t border-white/5 pt-12 text-center text-gray-500 text-xs md:text-sm tracking-wide">
+        <div className="border-t border-white/5 pt-12 text-center text-gray-400 text-xs md:text-sm tracking-wide">
           {footerData?.copyright || `© ${new Date().getFullYear()} Bytewer. Todos os direitos reservados.`}
         </div>
       </div>

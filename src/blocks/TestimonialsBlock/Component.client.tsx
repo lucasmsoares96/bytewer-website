@@ -91,18 +91,18 @@ const TestimonialCard: React.FC<{
         </div>
 
         <div className="flex-1 overflow-y-auto pr-2 custom-testimonial-scrollbar">
-          <p className={`${position === 'active' ? 'text-gray-400' : 'text-zinc-700'} font-medium italic leading-relaxed text-sm md:text-lg transition-colors duration-200`}>
+          <p className={`${position === 'active' ? 'text-gray-400' : 'text-gray-200'} font-medium italic leading-relaxed text-sm md:text-lg transition-colors duration-200`}>
             &quot;{testimonial.quote}&quot;
           </p>
         </div>
 
         <div className="mt-6 flex items-center gap-4 pt-4 border-t border-white/5">
-          <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-zinc-900/50 border border-white/5 flex items-center justify-center text-zinc-600 font-bold text-lg shrink-0">
+          <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-zinc-900/50 border border-white/5 flex items-center justify-center text-gray-400 font-bold text-lg shrink-0">
             {testimonial.author?.charAt(0)}
           </div>
           <div className="min-w-0 text-left">
-            <div className={`font-bold text-sm md:text-base truncate tracking-tight transition-colors ${position === 'active' ? 'text-white/80' : 'text-zinc-700'}`}>{testimonial.author}</div>
-            <div className="text-zinc-800 text-[10px] font-bold uppercase tracking-wider truncate">{testimonial.role}</div>
+            <div className={`font-bold text-sm md:text-base truncate tracking-tight transition-colors ${position === 'active' ? 'text-white/80' : 'text-gray-200'}`}>{testimonial.author}</div>
+            <div className={`text-[10px] font-bold uppercase tracking-wider truncate ${position === 'active' ? 'text-gray-400' : 'text-gray-300'}`}>{testimonial.role}</div>
           </div>
         </div>
       </div>
@@ -177,14 +177,16 @@ export const TestimonialsBlockClient: React.FC<{ data: TestimonialsBlockType }> 
              <ChevronLeft size={20} />
            </button>
 
-           <div className="flex gap-2.5">
+           <div className="flex gap-2">
              {testimonials.map((_: any, i: number) => (
                <button
                  key={i}
                  onClick={() => setActiveIndex(i)}
-                 className={`h-1 transition-all duration-500 rounded-full ${i === activeIndex ? 'w-10 bg-brand/40' : 'w-2 bg-white/5'}`}
+                 className="min-h-[44px] min-w-[24px] flex items-center justify-center"
                  aria-label={`Go to testimonial ${i + 1}`}
-               />
+               >
+                 <span className={`block h-1 transition-all duration-500 rounded-full ${i === activeIndex ? 'w-10 bg-brand/40' : 'w-2 bg-white/5'}`} />
+               </button>
              ))}
            </div>
 

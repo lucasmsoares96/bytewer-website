@@ -46,8 +46,9 @@
   --font-mono: var(--font-geist-mono);
   --font-sans: var(--font-inter), var(--font-geist-sans);
 
-  /* Bytewer brand palette (primary = #5B4EFF) — used by section blocks. */
-  --color-brand: oklch(57.75% 0.246 270deg);
+  /* Bytewer brand palette (primary = #5B4EFF) — used by section blocks.
+     Lightness raised to 65% for WCAG AA contrast on dark backgrounds. */
+  --color-brand: oklch(65% 0.246 270deg);
   --color-brand-foreground: oklch(98.5% 0 0deg);
   --color-brand-muted: oklch(57.75% 0.246 270deg / 0.1);
   --color-bytewer-bg: oklch(8% 0.01 270deg);

@@ -46,7 +46,7 @@ export const PostCard: React.FC<{ post: PostCardData }> = ({ post }) => {
       </div>
 
       <div className="p-8 flex flex-col flex-1">
-        <div className="flex items-center gap-4 text-xs font-medium text-gray-500 mb-4">
+        <div className="flex items-center gap-4 text-xs font-medium text-gray-400 mb-4">
           <div className="flex items-center gap-1.5">
             <Calendar size={14} className="text-brand/60" />
             {post.publishedAt ? formatDateTime(post.publishedAt) : isEn ? 'Recent' : 'Recente'}
