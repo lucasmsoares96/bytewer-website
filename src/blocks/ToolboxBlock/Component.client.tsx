@@ -25,6 +25,8 @@ const VectorBackground = () => (
   </div>
 );
 
+const proxyExternalLogo = (url: string) => `/api/toolbox-logo?url=${encodeURIComponent(url)}`
+
 export const ToolboxBlockClient: React.FC<ToolboxBlockClientProps> = ({ 
   anchor, 
   data 
@@ -81,7 +83,10 @@ export const ToolboxBlockClient: React.FC<ToolboxBlockClientProps> = ({
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-auto">
                     {cat.items?.map((tech, j) => {
                       const logo = typeof tech.logo === 'object' ? (tech.logo as Media | null) : null
-                      const logoUrl = tech.externalLogoUrl || logo?.url
+                      const localLogoUrl = logo?.url
+                      const externalLogoUrl = tech.externalLogoUrl
+                        ? proxyExternalLogo(tech.externalLogoUrl)
+                        : null
 
                       return (
                         <div 
@@ -89,10 +94,22 @@ export const ToolboxBlockClient: React.FC<ToolboxBlockClientProps> = ({
                           className="flex flex-col items-center justify-center gap-3 p-4 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 hover:border-white/20 transition-all duration-300 group/item"
                         >
                            <div className="w-10 h-10 md:w-12 md:h-12 relative flex items-center justify-center transition-transform duration-300 group-hover/item:scale-110">
-                             {logoUrl ? (
-                               <img
-                                  src={logoUrl}
+                             {localLogoUrl ? (
+                               <Image
+                                  src={localLogoUrl}
                                   alt={tech.name ?? ''}
+                                  fill
+                                  sizes="48px"
+                                  quality={100}
+                                  className="object-contain filter grayscale group-hover/item:grayscale-0 transition-all duration-300 opacity-70 group-hover/item:opacity-100"
+                               />
+                             ) : externalLogoUrl ? (
+                               <img
+                                  src={externalLogoUrl}
+                                  alt={tech.name ?? ''}
+                                  loading="lazy"
+                                  decoding="async"
+                                  referrerPolicy="no-referrer"
                                   className="w-full h-full object-contain filter grayscale group-hover/item:grayscale-0 transition-all duration-300 opacity-70 group-hover/item:opacity-100"
                                />
                              ) : (

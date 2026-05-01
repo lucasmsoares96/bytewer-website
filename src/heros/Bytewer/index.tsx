@@ -46,19 +46,14 @@ export const BytewerHero: React.FC<Props> = ({
       <div className="mx-auto max-w-[1400px] relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center">
           <div className="flex flex-col z-10">
-            <motion.h1
-              initial={{ y: 30 }}
-              animate={{ y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-white text-5xl md:text-6xl lg:text-[4.5rem] font-bold leading-[1.1] tracking-tight drop-shadow-sm"
-            >
+            <h1 className="text-white text-5xl md:text-6xl lg:text-[4.5rem] font-bold leading-[1.1] tracking-tight drop-shadow-sm">
               {title}{' '}
               {titleHighlight && (
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand to-blue-400">
                   {titleHighlight}
                 </span>
               )}
-            </motion.h1>
+            </h1>
 
             {subtitle && (
               <motion.h2

@@ -4,10 +4,7 @@ import { cn } from '@/utilities/ui'
 import { GeistMono } from 'geist/font/mono'
 import { GeistSans } from 'geist/font/sans'
 import { Inter } from 'next/font/google'
-import Script from 'next/script'
 import React from 'react'
-
-import { ADS_ID } from '@/utilities/gtag'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -22,6 +19,7 @@ import { InitTheme } from '@/providers/Theme/InitTheme'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
 import { getSiteSEO } from '@/utilities/getSiteSEO'
 import { JsonLd } from '@/components/JsonLd'
+import { GoogleAdsOnEngagement } from '@/components/GoogleAdsOnEngagement'
 import { buildOrganizationLd, buildWebSiteLd } from '@/utilities/jsonLd'
 import { draftMode } from 'next/headers'
 import { notFound } from 'next/navigation'
@@ -79,18 +77,7 @@ export default async function RootLayout({ children, params }: Props) {
         )}
       </head>
       <body className="bg-bytewer-bg text-white" suppressHydrationWarning>
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${ADS_ID}`}
-          strategy="afterInteractive"
-        />
-        <Script id="gtag-init" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${ADS_ID}');
-          `}
-        </Script>
+        <GoogleAdsOnEngagement />
         <JsonLd data={organizationLd} />
         <JsonLd data={websiteLd} />
         <Providers>

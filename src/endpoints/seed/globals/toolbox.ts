@@ -4,10 +4,12 @@ import type { Media } from '@/payload-types'
 export async function seedToolbox({
   payload,
   n8nLogo,
+  openaiLogo,
   evolutionLogo,
 }: {
   payload: Payload
   n8nLogo: Media
+  openaiLogo: Media
   evolutionLogo: Media
 }) {
   await payload.updateGlobal({
@@ -46,7 +48,7 @@ export async function seedToolbox({
           iconName: 'Zap',
           items: [
             { name: 'n8n', logo: n8nLogo.id },
-            { name: 'OpenAI', externalLogoUrl: 'https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg' },
+            { name: 'OpenAI', logo: openaiLogo.id },
             { name: 'WhatsApp', externalLogoUrl: 'https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg' },
             { name: 'Evolution', logo: evolutionLogo.id },
           ],

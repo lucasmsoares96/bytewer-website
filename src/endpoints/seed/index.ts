@@ -80,7 +80,12 @@ export const seed = async ({
 
   payload.logger.info('— Seeding globals (services, toolbox, siteSettings)...')
   await seedServices({ payload })
-  await seedToolbox({ payload, n8nLogo: media.n8nLogo, evolutionLogo: media.evolutionLogo })
+  await seedToolbox({
+    payload,
+    n8nLogo: media.n8nLogo,
+    openaiLogo: media.openaiLogo,
+    evolutionLogo: media.evolutionLogo,
+  })
   await seedSiteSettings({
     payload,
     logoMedia: media.logoMedia,
