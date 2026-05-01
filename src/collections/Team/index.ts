@@ -1,5 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
+import { revalidateTeam, revalidateDeleteTeam } from './hooks/revalidateTeam'
+
 export const Team: CollectionConfig = {
   slug: 'team',
   admin: {
@@ -53,4 +55,8 @@ export const Team: CollectionConfig = {
       },
     },
   ],
+  hooks: {
+    afterChange: [revalidateTeam],
+    afterDelete: [revalidateDeleteTeam],
+  },
 }
