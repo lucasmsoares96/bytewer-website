@@ -8,6 +8,7 @@ export const Code: Block = {
       name: 'language',
       type: 'select',
       defaultValue: 'typescript',
+      required: true,
       options: [
         {
           label: 'Typescript',
